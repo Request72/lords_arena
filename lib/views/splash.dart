@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(Icons.shield, size: 100, color: Colors.white),
+            Icon(Icons.shield_outlined, size: 100, color: Colors.white),
             SizedBox(height: 16),
             Text(
               "Lords Arena",

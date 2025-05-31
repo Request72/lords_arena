@@ -48,7 +48,7 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Lords Arena"),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.blueGrey,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -72,11 +72,10 @@ class DashboardScreen extends StatelessWidget {
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
           children: [
-            buildCard(Icons.person, "My Hero", Colors.deepPurple),
-            buildCard(Icons.bolt, "Quests", Colors.orange),
+            buildCard(Icons.person, "My Profile", Colors.deepPurple),
             buildCard(Icons.backpack, "Inventory", Colors.green),
             buildCard(Icons.security, "Battle Arena", Colors.redAccent),
-            buildCard(Icons.stacked_bar_chart, "Leaderboard", Colors.blue),
+            buildCard(Icons.stacked_bar_chart, "Stats", Colors.blue),
             buildCard(Icons.settings, "Settings", Colors.grey),
           ],
         ),

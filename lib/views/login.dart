@@ -16,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    // TEMP: Remove condition if you want any email/password to work
+
     if (email == "player@lords.com" && password == "123456") {
       Navigator.pushReplacementNamed(context, '/home');
     } else {
