@@ -4,6 +4,6 @@ ThemeData getApplicationTheme() {
   return ThemeData(
     primarySwatch: Colors.deepOrange,
     scaffoldBackgroundColor: Colors.grey,
-    fontFamily: "OpenSansItalic",
+    fontFamily: "TinosBold",
   );
 }
