@@ -17,14 +17,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    _checkLoginStatus();
+  }
 
+  Future<void> _checkLoginStatus() async {
     final cubit = context.read<LoginCubit>();
-    if (cubit.hiveStorage.isLoggedIn()) {
-      Future.delayed(Duration.zero, () {
-        if (mounted) {
-          Navigator.pushReplacementNamed(context, '/home');
-        }
-      });
+    final isLoggedIn = await cubit.userLocalDataSource.isLoggedIn();
+
+    if (!mounted) return;
+
+    if (isLoggedIn) {
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/storage/hive_storage.dart';
+import 'package:get_it/get_it.dart';
+import 'package:lords_arena/features/auth/domain/datasources/user_local_data_source.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,16 +10,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final hiveStorage = HiveStorage();
+  final userLocalDataSource = GetIt.I<UserLocalDataSource>();
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      final route = hiveStorage.isLoggedIn() ? '/home' : '/';
-      Navigator.pushReplacementNamed(context, route);
-    });
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    await Future.delayed(const Duration(seconds: 2));
+    final isLoggedIn = await userLocalDataSource.isLoggedIn();
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, isLoggedIn ? '/home' : '/');
   }
 
   @override
