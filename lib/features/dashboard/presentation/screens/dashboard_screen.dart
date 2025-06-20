@@ -27,7 +27,7 @@ class DashboardScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/images/lordsarena.png', height: 120),
+                Image.asset('assets/images/LordsArena.png', height: 120),
                 const SizedBox(height: 20),
                 const Text(
                   "WELCOME TO THE ARENA",

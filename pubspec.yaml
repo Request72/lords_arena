@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_bloc: ^8.1.3
+  get_it: ^7.6.0
   cupertino_icons: ^1.0.8
   uuid: ^4.3.3
   provider: ^6.1.5
@@ -32,10 +34,16 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/lordsarena.png
+    - assets/images/LordsArena.png
     - assets/images/warzone.jpg
 
   fonts:
     - family: Tinos Bold
       fonts:
         - asset: assets/fonts/Tinos-Bold.ttf
+    - family: Tinos Regular
+      fonts:
+        - asset: assets/fonts/Tinos-Regular.ttf
+    - family: Tinos Italic
+      fonts:  
+        - asset: assets/fonts/Tinos-Italic.ttf

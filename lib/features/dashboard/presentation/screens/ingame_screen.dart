@@ -102,6 +102,7 @@ class _InGameScreenState extends State<InGameScreen> {
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
         padding: const EdgeInsets.all(16),
+        // ignore: deprecated_member_use
         backgroundColor: Colors.amber.withOpacity(0.9),
         foregroundColor: Colors.black,
       ),

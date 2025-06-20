@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 class HiveStorage {
   final Box _box = Hive.box('userBox');
 
-  void saveUser(String email, {required String userId}) {
+  void saveUser(String email, {required String userId, required String token}) {
     _box.put('user_email', email);
     _box.put('user_id', userId);
   }

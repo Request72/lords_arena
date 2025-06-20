@@ -1,42 +1,48 @@
 import 'dart:convert';
+import 'dart:developer' as dev;
 import 'package:http/http.dart' as http;
+import 'package:lords_arena/features/auth/data/models/user_model.dart';
 
 class AuthRemoteDataSource {
-  final String baseUrl = 'http://192.168.1.86:5000/api';
+  final String baseUrl = 'http://localhost:5000/api/auth';
 
-  Future<String?> signup(String email, String password) async {
-    try {
-      final res = await http.post(
-        Uri.parse('$baseUrl/signup'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
-      );
-      if (res.statusCode == 201) {
-        final data = jsonDecode(res.body);
-        return data['userId'];
-      }
-    } catch (e) {
-      // ignore: avoid_print
-      print('Signup error: $e');
+  Future<UserModel?> login(String email, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password}),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return UserModel.fromJson(json);
+    } else {
+      dev.log("Login failed", error: response.body);
+      return null;
     }
-    return null;
   }
 
-  Future<String?> login(String email, String password) async {
-    try {
-      final res = await http.post(
-        Uri.parse('$baseUrl/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
-      );
-      if (res.statusCode == 200) {
-        final data = jsonDecode(res.body);
-        return data['userId'];
-      }
-    } catch (e) {
-      // ignore: avoid_print
-      print('Login error: $e');
+  Future<UserModel?> signup(
+    String username,
+    String email,
+    String password,
+  ) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/signup'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': username,
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return UserModel.fromJson(json);
+    } else {
+      dev.log("Signup failed", error: response.body);
+      return null;
     }
-    return null;
   }
 }
