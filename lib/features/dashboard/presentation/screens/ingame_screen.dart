@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
-import '../../../../core/storage/hive_storage.dart';
+import 'package:lords_arena/core/service_locator/service_locator.dart';
+import 'package:lords_arena/core/storage/hive_storage.dart';
 
 class InGameScreen extends StatefulWidget {
   const InGameScreen({super.key});
@@ -9,11 +11,10 @@ class InGameScreen extends StatefulWidget {
 }
 
 class _InGameScreenState extends State<InGameScreen> {
-  final HiveStorage hiveStorage = HiveStorage();
+  final HiveStorage hiveStorage = sl<HiveStorage>();
 
   double playerX = 100;
   double playerY = 300;
-
   String? userEmail;
   String? userId;
 
@@ -22,13 +23,21 @@ class _InGameScreenState extends State<InGameScreen> {
     super.initState();
     userEmail = hiveStorage.getUserEmail();
     userId = hiveStorage.getUserId();
+    playerX = hiveStorage.getPlayerX();
+    playerY = hiveStorage.getPlayerY();
   }
 
   void movePlayer(double dx, double dy) {
     setState(() {
       playerX += dx;
       playerY += dy;
+      hiveStorage.savePosition(playerX, playerY);
     });
+  }
+
+  void shoot() {
+    log('Shoot triggered!');
+    // Add shooting logic here later
   }
 
   @override
@@ -37,11 +46,12 @@ class _InGameScreenState extends State<InGameScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
+          // Background
           Positioned.fill(
             child: Image.asset('assets/images/warzone.jpg', fit: BoxFit.cover),
           ),
 
-          // Show Player
+          // Player
           AnimatedPositioned(
             duration: const Duration(milliseconds: 100),
             left: playerX,
@@ -53,7 +63,7 @@ class _InGameScreenState extends State<InGameScreen> {
             ),
           ),
 
-          // HUD (Player Info)
+          // HUD: Email + ID
           Positioned(
             top: 40,
             left: 20,
@@ -72,7 +82,32 @@ class _InGameScreenState extends State<InGameScreen> {
             ),
           ),
 
-          // Controls
+          // Health bar
+          Positioned(
+            top: 100,
+            left: 20,
+            child: Row(
+              children: [
+                const Text("Health:", style: TextStyle(color: Colors.white)),
+                const SizedBox(width: 10),
+                Container(
+                  width: 100,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    color: Colors.red,
+                  ),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.7, // Simulated 70% health
+                    alignment: Alignment.centerLeft,
+                    child: Container(color: Colors.green),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Movement Controls
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -91,6 +126,19 @@ class _InGameScreenState extends State<InGameScreen> {
               ),
             ),
           ),
+
+          // Fire button
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: FloatingActionButton(
+                onPressed: shoot,
+                backgroundColor: Colors.red,
+                child: const Icon(Icons.whatshot),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -102,8 +150,12 @@ class _InGameScreenState extends State<InGameScreen> {
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
         padding: const EdgeInsets.all(16),
-        // ignore: deprecated_member_use
-        backgroundColor: Colors.amber.withOpacity(0.9),
+        backgroundColor: const Color.fromRGBO(
+          255,
+          191,
+          0,
+          0.9,
+        ), // Replaces withOpacity
         foregroundColor: Colors.black,
       ),
       child: Icon(icon, size: 30),

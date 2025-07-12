@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _checkLoginStatus() async {
     final cubit = context.read<LoginCubit>();
-    final isLoggedIn = await cubit.userLocalDataSource.isLoggedIn();
+    final isLoggedIn = cubit.isLoggedIn();
 
     if (!mounted) return;
 
