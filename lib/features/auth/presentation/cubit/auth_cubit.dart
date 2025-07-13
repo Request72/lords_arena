@@ -7,7 +7,7 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository repository;
 
-  AuthCubit(this.repository) : super(AuthInitial());
+  AuthCubit({required this.repository}) : super(AuthInitial());
 
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
@@ -27,5 +27,10 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       emit(AuthFailure("Signup failed. Try again."));
     }
+  }
+
+  void authenticate(UserModel fakeUser) {
+    emit(AuthLoading());
+    emit(AuthAuthenticated(fakeUser));
   }
 }
