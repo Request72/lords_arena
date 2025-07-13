@@ -23,6 +23,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   test_cov_console: ^0.2.2
+  bloc_test: ^10.0.0
 
 dev_dependencies:
   flutter_test:
