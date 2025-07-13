@@ -1,8 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lords_arena/features/auth/data/models/user_model.dart';
-import 'package:lords_arena/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:lords_arena/features/auth/presentation/cubit/auth_cubit.dart'
-    hide AuthLoading;
+import 'package:lords_arena/features/auth/presentation/cubit/auth_cubit.dart';
+
 import '../../../../mocks/mock_dependencies.mocks.dart';
 
 void main() {
@@ -24,15 +23,11 @@ void main() {
 
       cubit.authenticate(fakeUser);
 
-      await expectLater(
-        cubit.stream,
-        emitsInOrder([
-          isA<AuthLoading>(),
-          predicate(
-            (state) => state is AuthAuthenticated && state.user.userId == '123',
-          ),
-        ]),
-      );
+      final states = await cubit.stream.take(2).toList();
+
+      expect(states[0], isA<AuthLoading>());
+      expect(states[1], isA<AuthAuthenticated>());
+      expect((states[1] as AuthAuthenticated).user.userId, '123');
     });
   });
 }

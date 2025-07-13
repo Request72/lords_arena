@@ -17,8 +17,12 @@ void main() {
       );
     });
 
+    tearDown(() {
+      loginCubit.close();
+    });
+
     test('Initial state is LoginInitial', () {
-      expect(loginCubit.state.runtimeType.toString(), 'LoginInitial');
+      expect(loginCubit.state, isA<LoginInitial>());
     });
   });
 }
