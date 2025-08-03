@@ -12,7 +12,7 @@ class AuthRemoteDataSource {
     if (kIsWeb) {
       baseUrl = 'http://localhost:5000/api/auth'; // ✅ Web uses localhost
     } else if (Platform.isAndroid) {
-      baseUrl = 'http://192.168.118.207:5000/api/auth'; // ✅ Android emulator
+      baseUrl = 'http://192.168.1.72:5000/api/auth'; // ✅ Android uses actual IP
     } else {
       baseUrl = 'http://localhost:5000/api/auth'; // ✅ iOS/desktop
     }

@@ -1,11 +1,23 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 final logger = Logger();
 
 class PlayerApiService {
-  final String baseUrl = 'http://localhost:5000/api/player';
+  late final String baseUrl;
+
+  PlayerApiService() {
+    if (kIsWeb) {
+      baseUrl = 'http://localhost:5000/api/player';
+    } else if (Platform.isAndroid) {
+      baseUrl = 'http://192.168.0.125:5000/api/player';
+    } else {
+      baseUrl = 'http://localhost:5000/api/player';
+    }
+  }
 
   Future<void> sendPlayerMovement(String userId, double x, double y) async {
     try {

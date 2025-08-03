@@ -11,21 +11,31 @@ class UserModel extends HiveObject {
   final String email;
 
   @HiveField(2)
+  final String username;
+
+  @HiveField(3)
   final String token;
 
-  UserModel({required this.userId, required this.email, required this.token});
+  UserModel({
+    required this.userId,
+    required this.email,
+    required this.username,
+    required this.token,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      userId: json['user']['_id'],
-      email: json['user']['email'],
-      token: json['token'],
+      userId: json['userId'] ?? json['_id'] ?? '',
+      email: json['email'] ?? '',
+      username: json['username'] ?? '',
+      token: json['token'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() => {
     'userId': userId,
     'email': email,
+    'username': username,
     'token': token,
   };
 }

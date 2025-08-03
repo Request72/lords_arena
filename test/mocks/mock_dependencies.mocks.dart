@@ -3,19 +3,21 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i5;
 
+import 'package:lords_arena/features/auth/data/datasources/auth_local_data_source.dart'
+    as _i3;
 import 'package:lords_arena/features/auth/data/datasources/auth_remote_data_source.dart'
     as _i2;
-import 'package:lords_arena/features/auth/data/models/user_model.dart' as _i5;
+import 'package:lords_arena/features/auth/data/models/user_model.dart' as _i6;
 import 'package:lords_arena/features/auth/data/repositories/auth_repository_impl.dart'
-    as _i7;
-import 'package:lords_arena/features/auth/domain/repositories/auth_repository.dart'
     as _i8;
+import 'package:lords_arena/features/auth/domain/repositories/auth_repository.dart'
+    as _i9;
 import 'package:lords_arena/features/user/data/repositories/user_repository.dart'
-    as _i6;
+    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i3;
+import 'package:mockito/src/dummies.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -42,6 +44,17 @@ class _FakeAuthRemoteDataSource_0 extends _i1.SmartFake
         );
 }
 
+class _FakeAuthLocalDataSource_1 extends _i1.SmartFake
+    implements _i3.AuthLocalDataSource {
+  _FakeAuthLocalDataSource_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [AuthRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -54,7 +67,7 @@ class MockAuthRemoteDataSource extends _i1.Mock
   @override
   String get baseUrl => (super.noSuchMethod(
         Invocation.getter(#baseUrl),
-        returnValue: _i3.dummyValue<String>(
+        returnValue: _i4.dummyValue<String>(
           this,
           Invocation.getter(#baseUrl),
         ),
@@ -70,7 +83,7 @@ class MockAuthRemoteDataSource extends _i1.Mock
       );
 
   @override
-  _i4.Future<_i5.UserModel?> login(
+  _i5.Future<_i6.UserModel?> login(
     String? email,
     String? password,
   ) =>
@@ -82,11 +95,11 @@ class MockAuthRemoteDataSource extends _i1.Mock
             password,
           ],
         ),
-        returnValue: _i4.Future<_i5.UserModel?>.value(),
-      ) as _i4.Future<_i5.UserModel?>);
+        returnValue: _i5.Future<_i6.UserModel?>.value(),
+      ) as _i5.Future<_i6.UserModel?>);
 
   @override
-  _i4.Future<_i5.UserModel?> signup(
+  _i5.Future<_i6.UserModel?> signup(
     String? username,
     String? email,
     String? password,
@@ -100,14 +113,14 @@ class MockAuthRemoteDataSource extends _i1.Mock
             password,
           ],
         ),
-        returnValue: _i4.Future<_i5.UserModel?>.value(),
-      ) as _i4.Future<_i5.UserModel?>);
+        returnValue: _i5.Future<_i6.UserModel?>.value(),
+      ) as _i5.Future<_i6.UserModel?>);
 }
 
 /// A class which mocks [UserRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserRepository extends _i1.Mock implements _i6.UserRepository {
+class MockUserRepository extends _i1.Mock implements _i7.UserRepository {
   MockUserRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -153,7 +166,7 @@ class MockUserRepository extends _i1.Mock implements _i6.UserRepository {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthRepositoryImpl extends _i1.Mock
-    implements _i7.AuthRepositoryImpl {
+    implements _i8.AuthRepositoryImpl {
   MockAuthRepositoryImpl() {
     _i1.throwOnMissingStub(this);
   }
@@ -168,7 +181,16 @@ class MockAuthRepositoryImpl extends _i1.Mock
       ) as _i2.AuthRemoteDataSource);
 
   @override
-  _i4.Future<_i5.UserModel?> login(
+  _i3.AuthLocalDataSource get localDataSource => (super.noSuchMethod(
+        Invocation.getter(#localDataSource),
+        returnValue: _FakeAuthLocalDataSource_1(
+          this,
+          Invocation.getter(#localDataSource),
+        ),
+      ) as _i3.AuthLocalDataSource);
+
+  @override
+  _i5.Future<_i6.UserModel?> login(
     String? email,
     String? password,
   ) =>
@@ -180,11 +202,11 @@ class MockAuthRepositoryImpl extends _i1.Mock
             password,
           ],
         ),
-        returnValue: _i4.Future<_i5.UserModel?>.value(),
-      ) as _i4.Future<_i5.UserModel?>);
+        returnValue: _i5.Future<_i6.UserModel?>.value(),
+      ) as _i5.Future<_i6.UserModel?>);
 
   @override
-  _i4.Future<_i5.UserModel?> signup(
+  _i5.Future<_i6.UserModel?> signup(
     String? username,
     String? email,
     String? password,
@@ -198,20 +220,49 @@ class MockAuthRepositoryImpl extends _i1.Mock
             password,
           ],
         ),
-        returnValue: _i4.Future<_i5.UserModel?>.value(),
-      ) as _i4.Future<_i5.UserModel?>);
+        returnValue: _i5.Future<_i6.UserModel?>.value(),
+      ) as _i5.Future<_i6.UserModel?>);
+
+  @override
+  _i5.Future<void> saveUser(_i6.UserModel? user) => (super.noSuchMethod(
+        Invocation.method(
+          #saveUser,
+          [user],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<_i6.UserModel?> getUser() => (super.noSuchMethod(
+        Invocation.method(
+          #getUser,
+          [],
+        ),
+        returnValue: _i5.Future<_i6.UserModel?>.value(),
+      ) as _i5.Future<_i6.UserModel?>);
+
+  @override
+  _i5.Future<void> logout() => (super.noSuchMethod(
+        Invocation.method(
+          #logout,
+          [],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 }
 
 /// A class which mocks [AuthRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthRepository extends _i1.Mock implements _i8.AuthRepository {
+class MockAuthRepository extends _i1.Mock implements _i9.AuthRepository {
   MockAuthRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<_i5.UserModel?> login(
+  _i5.Future<_i6.UserModel?> login(
     String? email,
     String? password,
   ) =>
@@ -223,11 +274,11 @@ class MockAuthRepository extends _i1.Mock implements _i8.AuthRepository {
             password,
           ],
         ),
-        returnValue: _i4.Future<_i5.UserModel?>.value(),
-      ) as _i4.Future<_i5.UserModel?>);
+        returnValue: _i5.Future<_i6.UserModel?>.value(),
+      ) as _i5.Future<_i6.UserModel?>);
 
   @override
-  _i4.Future<_i5.UserModel?> signup(
+  _i5.Future<_i6.UserModel?> signup(
     String? username,
     String? email,
     String? password,
@@ -241,35 +292,35 @@ class MockAuthRepository extends _i1.Mock implements _i8.AuthRepository {
             password,
           ],
         ),
-        returnValue: _i4.Future<_i5.UserModel?>.value(),
-      ) as _i4.Future<_i5.UserModel?>);
+        returnValue: _i5.Future<_i6.UserModel?>.value(),
+      ) as _i5.Future<_i6.UserModel?>);
 
   @override
-  _i4.Future<void> saveUser(_i5.UserModel? user) => (super.noSuchMethod(
+  _i5.Future<void> saveUser(_i6.UserModel? user) => (super.noSuchMethod(
         Invocation.method(
           #saveUser,
           [user],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<_i5.UserModel?> getUser() => (super.noSuchMethod(
+  _i5.Future<_i6.UserModel?> getUser() => (super.noSuchMethod(
         Invocation.method(
           #getUser,
           [],
         ),
-        returnValue: _i4.Future<_i5.UserModel?>.value(),
-      ) as _i4.Future<_i5.UserModel?>);
+        returnValue: _i5.Future<_i6.UserModel?>.value(),
+      ) as _i5.Future<_i6.UserModel?>);
 
   @override
-  _i4.Future<void> logout() => (super.noSuchMethod(
+  _i5.Future<void> logout() => (super.noSuchMethod(
         Invocation.method(
           #logout,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 }
