@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:lords_arena/core/service_locator/service_locator.dart';
+import 'package:lords_arena/features/auth/data/models/user_model.dart';
 import 'package:lords_arena/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:lords_arena/features/auth/presentation/cubit/signup_cubit.dart';
 import 'package:lords_arena/features/auth/presentation/screens/login_screen.dart';
 import 'package:lords_arena/features/auth/presentation/screens/signup_screen.dart';
+import 'package:lords_arena/features/auth/presentation/screens/splash.dart';
 import 'package:lords_arena/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:lords_arena/features/dashboard/presentation/screens/settings_screen.dart';
+import 'package:lords_arena/features/dashboard/presentation/screens/stats_screen.dart';
+import 'package:lords_arena/features/ingame/presentation/screens/character_selection_screen.dart';
+import 'package:lords_arena/features/ingame/presentation/screens/ingame_screen.dart';
 import 'package:lords_arena/features/user/presentation/cubit/user_cubit.dart';
 
 class AppRouter extends StatelessWidget {
@@ -14,8 +20,9 @@ class AppRouter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Hive.box('userBox');
-    final token = Hive.box('userBox').get('user_token');
+    final userBox = Hive.box<UserModel>('userBox');
+    final user = userBox.get('user');
+    final token = user?.token;
 
     return MultiBlocProvider(
       providers: [
@@ -29,9 +36,18 @@ class AppRouter extends StatelessWidget {
         theme: ThemeData.dark(),
         initialRoute: token != null ? '/home' : '/login',
         routes: {
+          '/': (_) => const SplashScreen(),
           '/login': (_) => const LoginScreen(),
           '/signup': (_) => const SignupScreen(),
           '/home': (_) => DashboardScreen(),
+          '/character-selection': (_) => const CharacterSelectionScreen(),
+          '/ingame':
+              (_) => const InGameScreen(
+                selectedCharacter: 'default',
+                isMultiplayer: false,
+              ),
+          '/stats': (_) => const StatsScreen(),
+          '/settings': (_) => const SettingsScreen(),
         },
       ),
     );

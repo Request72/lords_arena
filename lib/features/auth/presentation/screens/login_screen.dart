@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lords_arena/features/auth/presentation/cubit/login_cubit.dart';
+import 'package:lords_arena/core/services/orientation_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,7 +18,19 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    _setPortraitMode();
     _checkLoginStatus();
+  }
+
+  Future<void> _setPortraitMode() async {
+    await OrientationService.setPortraitMode();
+  }
+
+  Future<void> _switchToLandscapeAndNavigate() async {
+    await OrientationService.setLandscapeMode();
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 
   Future<void> _checkLoginStatus() async {
@@ -45,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            Navigator.pushReplacementNamed(context, '/home');
+            _switchToLandscapeAndNavigate();
           } else if (state is LoginFailure) {
             ScaffoldMessenger.of(
               context,
