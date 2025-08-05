@@ -41,6 +41,21 @@ class _SignupScreenState extends State<SignupScreen> {
     final username = usernameController.text.trim();
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
+
+    if (username.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password must be at least 6 characters')),
+      );
+      return;
+    }
+
     context.read<SignupCubit>().signup(username, email, password);
   }
 
@@ -75,10 +90,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Column(
                       children: [
-                        Image.asset(
-                          'assets/images/LordsArena.png',
-                          height: 140,
-                        ),
+                        Image.asset('assets/images/icon.png', height: 140),
                         const SizedBox(height: 12),
                         const Text(
                           "SIGN UP",

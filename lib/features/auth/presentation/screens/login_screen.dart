@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Column(
                     children: [
-                      Image.asset('assets/images/LordsArena.png', height: 140),
+                      Image.asset('assets/images/icon.png', height: 140),
                       const SizedBox(height: 12),
                       const Text(
                         "LORDS ARENA",

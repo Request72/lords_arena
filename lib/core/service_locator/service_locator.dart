@@ -29,32 +29,25 @@ Future<void> init() async {
     () => HiveStorage(userBox: userBox, gameBox: gameBox),
   );
 
-  // ✅ Register remote data source for login/signup API calls
   sl.registerLazySingleton(() => AuthRemoteDataSource());
 
-  // ✅ Register local data source for auth storage
   sl.registerLazySingleton(() => AuthLocalDataSource());
 
-  // ✅ Register auth repository with both local and remote
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
   );
 
-  // ✅ Game API Services
   sl.registerLazySingleton(() => GameApiService());
   sl.registerLazySingleton(() => PlayerApiService());
 
-  // ✅ Local user storage layer
   sl.registerLazySingleton<UserLocalDataSource>(
     () => UserLocalDataSourceImpl(hiveStorage: sl()),
   );
 
-  // ✅ User repository
   sl.registerLazySingleton<UserRepository>(
     () => UserRepositoryImpl(userLocalDataSource: sl()),
   );
 
-  // ✅ Game repository
   sl.registerLazySingleton<GameRepository>(
     () => GameRepositoryImpl(
       gameApiService: sl(),
@@ -63,7 +56,6 @@ Future<void> init() async {
     ),
   );
 
-  // ✅ Cubits and Blocs
   sl.registerFactory(() => AuthBloc(repository: sl()));
   sl.registerFactory(() => AuthCubit(repository: sl()));
 
@@ -77,6 +69,5 @@ Future<void> init() async {
 
   sl.registerFactory(() => UserCubit(userRepository: sl()));
 
-  // ✅ Game cubit
   sl.registerFactory(() => GameCubit(gameRepository: sl()));
 }

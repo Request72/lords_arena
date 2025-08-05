@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
+import 'package:flame/events.dart';
 import 'package:flutter/services.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,11 @@ import 'bullet_component.dart';
 import 'weapon_component.dart';
 
 class PlayerComponent extends SpriteComponent
-    with HasGameReference<LordsArenaGame>, KeyboardHandler, CollisionCallbacks {
+    with
+        HasGameReference<LordsArenaGame>,
+        KeyboardHandler,
+        CollisionCallbacks,
+        TapCallbacks {
   final String spritePath;
   final JoystickComponent joystick;
   final int playerId;
@@ -56,7 +61,11 @@ class PlayerComponent extends SpriteComponent
   Future<void> onLoad() async {
     try {
       sprite = await gameRef.loadSprite(spritePath);
+      if (sprite == null) {
+        throw Exception('Failed to load sprite: $spritePath');
+      }
     } catch (e) {
+      print('Error loading sprite $spritePath: $e');
       // Fallback to colored circle if sprite fails to load
       paint = Paint()..color = color;
     }
@@ -375,6 +384,22 @@ class PlayerComponent extends SpriteComponent
       }
     }
     return true;
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    // Handle tap events for shooting
+    shoot();
+  }
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    // Handle tap up events if needed
+  }
+
+  @override
+  void onTapCancel(TapCancelEvent event) {
+    // Handle tap cancel events if needed
   }
 
   @override

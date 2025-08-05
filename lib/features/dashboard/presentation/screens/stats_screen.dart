@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lords_arena/core/services/orientation_service.dart';
 import 'package:lords_arena/core/services/stats_service.dart';
+import 'package:lords_arena/core/services/audio_service.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -15,12 +16,22 @@ class _StatsScreenState extends State<StatsScreen>
   Map<String, dynamic> _stats = {};
   bool _isLoading = true;
 
+  bool _soundEffectsEnabled = true;
+  bool _backgroundMusicEnabled = true;
+  bool _vibrationEnabled = true;
+  bool _audioOptimizationEnabled = true;
+  bool _lowLatencyEnabled = false;
+  double _soundVolume = 1.0;
+  double _musicVolume = 1.0;
+  String _vibrationIntensity = 'medium';
+
   @override
   void initState() {
     super.initState();
     _setLandscapeMode();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _loadStats();
+    _loadAudioSettings();
   }
 
   @override
@@ -38,6 +49,28 @@ class _StatsScreenState extends State<StatsScreen>
     setState(() {
       _stats = stats;
       _isLoading = false;
+    });
+  }
+
+  Future<void> _loadAudioSettings() async {
+    final soundEffects = await AudioService.isSoundEffectsEnabled();
+    final backgroundMusic = await AudioService.isBackgroundMusicEnabled();
+    final vibration = await AudioService.isVibrationEnabled();
+    final audioOptimization = await AudioService.isAudioOptimizationEnabled();
+    final lowLatency = await AudioService.isLowLatencyEnabled();
+    final soundVolume = await AudioService.getSoundVolume();
+    final musicVolume = await AudioService.getMusicVolume();
+    final vibrationIntensity = await AudioService.getVibrationIntensity();
+
+    setState(() {
+      _soundEffectsEnabled = soundEffects;
+      _backgroundMusicEnabled = backgroundMusic;
+      _vibrationEnabled = vibration;
+      _audioOptimizationEnabled = audioOptimization;
+      _lowLatencyEnabled = lowLatency;
+      _soundVolume = soundVolume;
+      _musicVolume = musicVolume;
+      _vibrationIntensity = vibrationIntensity;
     });
   }
 
@@ -61,6 +94,7 @@ class _StatsScreenState extends State<StatsScreen>
             Tab(text: 'Overview'),
             Tab(text: 'Achievements'),
             Tab(text: 'Leaderboard'),
+            Tab(text: 'Audio'),
           ],
         ),
       ),
@@ -76,6 +110,7 @@ class _StatsScreenState extends State<StatsScreen>
               _buildOverviewTab(),
               _buildAchievementsTab(),
               _buildLeaderboardTab(),
+              _buildAudioTab(),
             ],
           ),
         ],
@@ -516,6 +551,248 @@ class _StatsScreenState extends State<StatsScreen>
       trailing: Text(
         score,
         style: const TextStyle(color: Colors.amber, fontSize: 14),
+      ),
+    );
+  }
+
+  Widget _buildAudioTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildAudioSection('Sound Effects', [
+            _buildSwitchTile('Enable Sound Effects', _soundEffectsEnabled, (
+              value,
+            ) async {
+              await AudioService.setSoundEffectsEnabled(value);
+              setState(() => _soundEffectsEnabled = value);
+            }),
+            _buildSliderTile('Sound Volume', _soundVolume, (value) async {
+              await AudioService.setSoundVolume(value);
+              setState(() => _soundVolume = value);
+            }),
+          ]),
+          const SizedBox(height: 20),
+          _buildAudioSection('Background Music', [
+            _buildSwitchTile(
+              'Enable Background Music',
+              _backgroundMusicEnabled,
+              (value) async {
+                await AudioService.setBackgroundMusicEnabled(value);
+                setState(() => _backgroundMusicEnabled = value);
+              },
+            ),
+            _buildSliderTile('Music Volume', _musicVolume, (value) async {
+              await AudioService.setMusicVolume(value);
+              setState(() => _musicVolume = value);
+            }),
+          ]),
+          const SizedBox(height: 20),
+          _buildAudioSection('Vibration', [
+            _buildSwitchTile('Enable Vibration', _vibrationEnabled, (
+              value,
+            ) async {
+              await AudioService.setVibrationEnabled(value);
+              setState(() => _vibrationEnabled = value);
+            }),
+            _buildDropdownTile(
+              'Vibration Intensity',
+              _vibrationIntensity,
+              ['light', 'medium', 'heavy'],
+              (value) async {
+                await AudioService.setVibrationIntensity(value);
+                setState(() => _vibrationIntensity = value);
+              },
+            ),
+            _buildButtonTile('Test Vibration', Icons.vibration, () async {
+              await AudioService.vibrate();
+            }),
+          ]),
+          const SizedBox(height: 20),
+          _buildAudioSection('Audio Optimization', [
+            _buildSwitchTile('Audio Optimization', _audioOptimizationEnabled, (
+              value,
+            ) async {
+              await AudioService.setAudioOptimizationEnabled(value);
+              setState(() => _audioOptimizationEnabled = value);
+            }),
+            _buildSwitchTile('Low Latency Mode', _lowLatencyEnabled, (
+              value,
+            ) async {
+              await AudioService.setLowLatencyEnabled(value);
+              setState(() => _lowLatencyEnabled = value);
+            }),
+          ]),
+          const SizedBox(height: 20),
+          _buildAudioSection('Test Audio', [
+            _buildButtonTile('Test Sound Effects', Icons.volume_up, () async {
+              await AudioService.playSoundEffect('assets/audio/shoot.wav');
+            }),
+            _buildButtonTile(
+              'Test Background Music',
+              Icons.music_note,
+              () async {
+                await AudioService.playBackgroundMusic();
+              },
+            ),
+            _buildButtonTile('Stop Background Music', Icons.stop, () async {
+              await AudioService.stopBackgroundMusic();
+            }),
+            _buildButtonTile('Test All Settings', Icons.settings, () async {
+              final results = await AudioService.testSettings();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Settings Test: ${results.toString()}'),
+                  backgroundColor: Colors.amber,
+                ),
+              );
+            }),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAudioSection(String title, List<Widget> children) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.amber.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.amber,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSwitchTile(String title, bool value, Function(bool) onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeColor: Colors.amber,
+            activeTrackColor: Colors.amber.withOpacity(0.3),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSliderTile(
+    String title,
+    double value,
+    Function(double) onChanged,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              Text(
+                '${(value * 100).round()}%',
+                style: const TextStyle(color: Colors.amber, fontSize: 14),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Slider(
+            value: value,
+            onChanged: onChanged,
+            activeColor: Colors.amber,
+            inactiveColor: Colors.grey.withOpacity(0.3),
+            min: 0.0,
+            max: 1.0,
+            divisions: 10,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDropdownTile(
+    String title,
+    String value,
+    List<String> options,
+    Function(String) onChanged,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          DropdownButton<String>(
+            value: value,
+            onChanged: (newValue) {
+              if (newValue != null) onChanged(newValue);
+            },
+            dropdownColor: Colors.black,
+            style: const TextStyle(color: Colors.white),
+            underline: Container(height: 2, color: Colors.amber),
+            items:
+                options.map((String option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option.toUpperCase()),
+                  );
+                }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtonTile(String title, IconData icon, VoidCallback onPressed) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: onPressed,
+          icon: Icon(icon, color: Colors.black),
+          label: Text(title, style: const TextStyle(color: Colors.black)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.amber,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
       ),
     );
   }

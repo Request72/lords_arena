@@ -59,7 +59,7 @@ class _InGameScreenState extends State<InGameScreen> {
             child: SizedBox(
               width: 50,
               height: 50,
-              child: Image.asset('assets/images/lordsarena.png'),
+              child: Image.asset('assets/images/icon.png'),
             ),
           ),
 

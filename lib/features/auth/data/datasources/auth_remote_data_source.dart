@@ -10,11 +10,12 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource() {
     if (kIsWeb) {
-      baseUrl = 'http://localhost:5000/api/auth'; // ✅ Web uses localhost
+      baseUrl = ' http://172.26.12.181:5000/api/auth'; // ✅ Web uses localhost
     } else if (Platform.isAndroid) {
-      baseUrl = 'http://192.168.1.72:5000/api/auth'; // ✅ Android uses actual IP
+      baseUrl =
+          ' http://172.26.12.181:5000/api/auth'; // ✅ Android uses localhost
     } else {
-      baseUrl = 'http://localhost:5000/api/auth'; // ✅ iOS/desktop
+      baseUrl = 'http://172.26.12.181:5000/api/auth'; // ✅ iOS/desktop
     }
   }
 
@@ -56,8 +57,10 @@ class AuthRemoteDataSource {
         final json = jsonDecode(response.body);
         return UserModel.fromJson(json);
       } else {
-        dev.log("Signup failed", error: response.body);
-        return null;
+        final errorJson = jsonDecode(response.body);
+        final errorMessage = errorJson['message'] ?? 'Signup failed';
+        dev.log("Signup failed: $errorMessage", error: response.body);
+        throw Exception(errorMessage);
       }
     } catch (e, stack) {
       dev.log("Signup error", error: e, stackTrace: stack);
