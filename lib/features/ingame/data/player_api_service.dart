@@ -13,7 +13,7 @@ class PlayerApiService {
     if (kIsWeb) {
       baseUrl = 'http://localhost:5000/api/player';
     } else if (Platform.isAndroid) {
-      baseUrl = 'http://192.168.0.125:5000/api/player';
+      baseUrl = 'http://localhost:5000/api/player';
     } else {
       baseUrl = 'http://localhost:5000/api/player';
     }

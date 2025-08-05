@@ -36,6 +36,13 @@ class InGameScreen extends StatelessWidget {
               (context) => const Center(child: CircularProgressIndicator()),
           errorBuilder:
               (context, error) => Center(child: Text('Error: $error')),
+          backgroundBuilder:
+              (context) => Container(
+                color: Colors.black,
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.orange),
+                ),
+              ),
         ),
       ),
     );

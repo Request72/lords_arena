@@ -28,7 +28,11 @@ class EnemyComponent extends SpriteComponent
     // Use an existing character sprite for enemies
     try {
       sprite = await gameRef.loadSprite('sher.png');
+      if (sprite == null) {
+        throw Exception('Failed to load enemy sprite');
+      }
     } catch (e) {
+      print('Error loading enemy sprite: $e');
       // Fallback to colored circle if sprite fails to load
       paint = Paint()..color = const Color(0xFFFF4444);
     }

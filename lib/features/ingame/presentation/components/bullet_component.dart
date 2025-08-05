@@ -19,7 +19,11 @@ class BulletComponent extends SpriteComponent
   Future<void> onLoad() async {
     try {
       sprite = await gameRef.loadSprite('fire_bullet.png');
+      if (sprite == null) {
+        throw Exception('Failed to load bullet sprite');
+      }
     } catch (e) {
+      print('Error loading bullet sprite: $e');
       // Fallback to colored circle if sprite fails to load
       paint = Paint()..color = const Color(0xFFFFD700);
     }
@@ -49,7 +53,11 @@ class EnemyBulletComponent extends SpriteComponent
   Future<void> onLoad() async {
     try {
       sprite = await gameRef.loadSprite('enemy_bullet.png');
+      if (sprite == null) {
+        throw Exception('Failed to load enemy bullet sprite');
+      }
     } catch (e) {
+      print('Error loading enemy bullet sprite: $e');
       // Fallback to colored circle if sprite fails to load
       paint = Paint()..color = const Color(0xFFFF4444);
     }

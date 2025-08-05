@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame/events.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import '../presentation/components/player_component.dart';
@@ -14,7 +15,7 @@ import '../../../core/services/stats_service.dart';
 import '../../../core/services/audio_service.dart';
 
 class LordsArenaGame extends FlameGame
-    with HasCollisionDetection, HasKeyboardHandlerComponents {
+    with HasCollisionDetection, HasKeyboardHandlerComponents, TapCallbacks {
   final String selectedCharacter;
   late PlayerComponent player1;
   late PlayerComponent player2;
@@ -40,6 +41,9 @@ class LordsArenaGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
+    // Set touch input priority
+    priority = 0;
+    
     try {
       await images.loadAll([
         'warzone.jpg',
@@ -165,6 +169,7 @@ class LordsArenaGame extends FlameGame
         paint: Paint()..color = const Color(0xFF2196F3).withValues(alpha: 0.4),
       ),
       margin: const EdgeInsets.only(left: 32, bottom: 32),
+      priority: 10,
     );
     add(joystick1);
 
@@ -179,6 +184,7 @@ class LordsArenaGame extends FlameGame
         paint: Paint()..color = const Color(0xFFFF5722).withValues(alpha: 0.4),
       ),
       margin: const EdgeInsets.only(right: 32, bottom: 32),
+      priority: 10,
     );
     add(joystick2);
 
@@ -215,6 +221,7 @@ class LordsArenaGame extends FlameGame
         paint: Paint()..color = const Color(0xFFFFC107).withValues(alpha: 0.4),
       ),
       margin: const EdgeInsets.only(left: 32, bottom: 32),
+      priority: 10,
     );
     add(joystick1);
 
@@ -467,6 +474,24 @@ class LordsArenaGame extends FlameGame
     } catch (e) {
       // Ignore achievement errors
     }
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    // Handle tap events at game level
+    super.onTapDown(event);
+  }
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    // Handle tap up events at game level
+    super.onTapUp(event);
+  }
+
+  @override
+  void onTapCancel(TapCancelEvent event) {
+    // Handle tap cancel events at game level
+    super.onTapCancel(event);
   }
 }
 

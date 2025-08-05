@@ -27,7 +27,8 @@ class SignupCubit extends Cubit<SignupState> {
         emit(SignupFailure("Signup failed. Try again."));
       }
     } catch (e) {
-      emit(SignupFailure("Signup error: $e"));
+      final errorMessage = e.toString().replaceAll('Exception: ', '');
+      emit(SignupFailure(errorMessage));
     }
   }
 }

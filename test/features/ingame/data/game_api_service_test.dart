@@ -12,7 +12,7 @@ void main() {
     group('API Configuration Tests', () {
       test('should have correct base URL', () {
         // Act & Assert
-        expect(gameApiService.baseUrl, contains('192.168.0.125'));
+        expect(gameApiService.baseUrl, contains('localhost'));
         expect(gameApiService.baseUrl, contains('5000'));
         expect(gameApiService.baseUrl, contains('/api/game'));
       });
